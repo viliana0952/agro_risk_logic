@@ -1,0 +1,35 @@
+FUNCTION_BLOCK disaster_risk_block
+
+VAR_INPUT
+    weighted_risk : REAL;  
+END_VAR
+
+VAR_OUTPUT
+    disaster_risk : REAL;
+END_VAR
+
+FUZZIFY weighted_risk
+    TERM high := (0, 1) (30, 1) (50, 0);
+    TERM medium := (30, 0) (50, 1) (70, 0);
+    TERM low := (50, 0) (70, 1) (100, 1);
+END_FUZZIFY
+
+DEFUZZIFY disaster_risk
+    TERM high := (0, 1) (30, 1) (50, 0);
+    TERM medium := (30, 0) (50, 1) (70, 0);
+    TERM low := (50, 0) (70, 1) (100, 1);
+    METHOD : COG;
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK rules
+    AND : MIN;
+    ACT : MIN;
+    ACCU : MAX;
+
+    RULE 1 : IF weighted_risk IS high THEN disaster_risk IS high;
+    RULE 2 : IF weighted_risk IS medium THEN disaster_risk IS medium;
+    RULE 3 : IF weighted_risk IS low THEN disaster_risk IS low;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

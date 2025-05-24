@@ -1,0 +1,91 @@
+FUNCTION_BLOCK silni_vetrove
+
+VAR_INPUT
+    silni_vetrove_voda : REAL; 
+    silni_vetrove_gora_planina : REAL;
+    silni_vetrove_teritoriq : REAL;  
+    silni_vetrove_koga : REAL;  
+END_VAR
+
+VAR_OUTPUT
+    silni_vetrove_risk : REAL;
+END_VAR
+
+FUZZIFY silni_vetrove_voda
+    TERM very_high := (0, 1) (20, 1) (40, 0);
+    TERM high := (30, 0) (50, 1) (70, 0);
+    TERM medium := (60, 0) (75, 1) (90, 0);
+    TERM low := (80, 0) (100, 1);
+END_FUZZIFY
+
+FUZZIFY silni_vetrove_gora_planina
+    TERM extreme := (0, 1) (23, 1) (45, 0);
+    TERM high := (35, 0) (53, 1) (70, 0);
+    TERM medium := (65, 0) (83, 1) (95, 0);
+    TERM low := (90, 0) (100, 1);
+END_FUZZIFY
+
+FUZZIFY silni_vetrove_teritoriq
+    TERM risky := (0, 1) (80, 1) (100,0);
+    TERM safe := (0, 0) (70, 1) (100,1);
+END_FUZZIFY
+
+FUZZIFY silni_vetrove_koga
+    TERM risky := (0, 1) (40, 1) (100,0);
+    TERM safe := (0, 0) (60, 1) (100,1);
+END_FUZZIFY
+
+DEFUZZIFY silni_vetrove_risk
+    TERM extreme := (0, 1) (25, 1) (50, 0);
+    TERM high := (25, 0) (50, 1) (75, 0);
+    TERM medium:= (50, 0) (75, 1) (90, 0);
+    TERM low:= (80, 0) (90, 1) (100, 1);
+    METHOD : COG;
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+    AND : MIN;
+    ACT : MIN;
+    ACCU : MAX;
+
+    RULE 1  : IF silni_vetrove_voda IS very_high AND silni_vetrove_gora_planina IS extreme AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS high;
+    RULE 2  : IF silni_vetrove_voda IS very_high AND silni_vetrove_gora_planina IS extreme AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS high;
+    RULE 3  : IF silni_vetrove_voda IS very_high AND silni_vetrove_gora_planina IS high AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS high;
+    RULE 4  : IF silni_vetrove_voda IS very_high AND silni_vetrove_gora_planina IS high AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS high;
+    RULE 5  : IF silni_vetrove_voda IS very_high AND silni_vetrove_gora_planina IS medium AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS high;
+    RULE 6  : IF silni_vetrove_voda IS very_high AND silni_vetrove_gora_planina IS medium AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS high;
+    RULE 7  : IF silni_vetrove_voda IS very_high AND silni_vetrove_gora_planina IS low AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS medium;
+    RULE 8  : IF silni_vetrove_voda IS very_high AND silni_vetrove_gora_planina IS low AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS medium;
+    
+    RULE 9  : IF silni_vetrove_voda IS high AND silni_vetrove_gora_planina IS extreme AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS high;
+    RULE 10 : IF silni_vetrove_voda IS high AND silni_vetrove_gora_planina IS extreme AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS high;
+    RULE 11 : IF silni_vetrove_voda IS high AND silni_vetrove_gora_planina IS high AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS high;
+    RULE 12 : IF silni_vetrove_voda IS high AND silni_vetrove_gora_planina IS high AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS high;
+    RULE 13 : IF silni_vetrove_voda IS high AND silni_vetrove_gora_planina IS medium AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS medium;
+    RULE 14 : IF silni_vetrove_voda IS high AND silni_vetrove_gora_planina IS medium AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS medium;
+    RULE 15 : IF silni_vetrove_voda IS high AND silni_vetrove_gora_planina IS low AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS medium;
+    RULE 16 : IF silni_vetrove_voda IS high AND silni_vetrove_gora_planina IS low AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS medium;
+    
+    RULE 17 : IF silni_vetrove_voda IS medium AND silni_vetrove_gora_planina IS extreme AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS high;
+    RULE 18 : IF silni_vetrove_voda IS medium AND silni_vetrove_gora_planina IS extreme AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS medium;
+    RULE 19 : IF silni_vetrove_voda IS medium AND silni_vetrove_gora_planina IS high AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS medium;
+    RULE 20 : IF silni_vetrove_voda IS medium AND silni_vetrove_gora_planina IS high AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS medium;
+    RULE 21 : IF silni_vetrove_voda IS medium AND silni_vetrove_gora_planina IS medium AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS medium;
+    RULE 22 : IF silni_vetrove_voda IS medium AND silni_vetrove_gora_planina IS medium AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS low;
+    RULE 23 : IF silni_vetrove_voda IS medium AND silni_vetrove_gora_planina IS low AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS low;
+    RULE 24 : IF silni_vetrove_voda IS medium AND silni_vetrove_gora_planina IS low AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS low;
+    
+    RULE 25 : IF silni_vetrove_voda IS low AND silni_vetrove_gora_planina IS extreme AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS medium;
+    RULE 26 : IF silni_vetrove_voda IS low AND silni_vetrove_gora_planina IS extreme AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS medium;
+    RULE 27 : IF silni_vetrove_voda IS low AND silni_vetrove_gora_planina IS high AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS low;
+    RULE 28 : IF silni_vetrove_voda IS low AND silni_vetrove_gora_planina IS high AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS low;
+    RULE 29 : IF silni_vetrove_voda IS low AND silni_vetrove_gora_planina IS medium AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS low;
+    RULE 30 : IF silni_vetrove_voda IS low AND silni_vetrove_gora_planina IS medium AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS low;
+    RULE 31 : IF silni_vetrove_voda IS low AND silni_vetrove_gora_planina IS low AND silni_vetrove_koga IS risky THEN silni_vetrove_risk IS low;
+    RULE 32 : IF silni_vetrove_voda IS low AND silni_vetrove_gora_planina IS low AND silni_vetrove_koga IS safe THEN silni_vetrove_risk IS low;
+    RULE 33 : IF silni_vetrove_teritoriq IS risky THEN silni_vetrove_risk IS extreme;
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
